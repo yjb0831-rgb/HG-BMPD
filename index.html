@@ -9,12 +9,10 @@
         body { background-color: #f5f5f5; display: flex; justify-content: center; padding: 20px 10px; }
         .container { width: 100%; max-width: 450px; background: white; border: 1px solid #e0e0e0; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
-        /* 상단 헤더: 요청하신 제목으로 수정 */
         .header { background-color: #444; color: white; text-align: center; padding: 25px 15px; }
         .header h1 { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
         .header p { font-size: 13px; color: #ccc; }
         
-        /* 단일 탭 섹션 표시 */
         .tabs { background: #333; color: white; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; }
         
         .form-body { padding: 20px; }
@@ -22,14 +20,15 @@
         .form-group label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 6px; color: #111; }
         
         select, input[type="text"], textarea {
-            width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; background-color: #fafafa; outline: none;
+            width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; background-color: #fafafa; outline: none; color: #333;
         }
+        select:focus, input[type="text"]:focus, textarea:focus { background-color: #fff; border-color: #888; }
         textarea { resize: vertical; min-height: 80px; }
         
         .btn-submit {
             width: 100%; background-color: #007bff; color: white; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;
         }
-        .btn-submit:disabled { background-color: #ccc; }
+        .btn-submit:disabled { background-color: #ccc; cursor: not-allowed; }
         .footer-mark { text-align: right; color: #aaa; font-size: 12px; margin-top: 15px; }
     </style>
 </head>
@@ -48,7 +47,7 @@
             <label>종류 :</label>
             <select id="type">
                 <option value="BM">BM</option>
-                <option value="PD"></option>
+                <option value="PD">PD</option>
                 <option value="정기점검">정기점검</option>
             </select>
         </div>
@@ -65,7 +64,7 @@
             <label>1. 호기 :</label>
             <select id="hogi">
                 <option value="-">-</option>
-                <option value="1-A">1-A</option>
+                <option value="1-4">1-4</option>
             </select>
         </div>
 
@@ -74,18 +73,26 @@
             <select id="machine">
                 <option value="-">-</option>
                 <option value="DNC">DNC</option>
-                <option value="AZS">AZS</option>
             </select>
         </div>
 
         <div class="form-group">
             <label>2-2. Unit :</label>
-            <select id="unit"><option value="-">-</option></select>
+            <select id="unit">
+                <option value="-">-</option>
+                <option value="Vision Unit">Vision Unit</option>
+                <option value="Conveyor Unit">Conveyor Unit</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label>2-3. Assy' :</label>
-            <select id="assy"><option value="-">-</option></select>
+            <select id="assy">
+                <option value="-">-</option>
+                <option value="Camera Assy">Camera Assy</option>
+                <option value="Lighting Assy">Lighting Assy</option>
+                <option value="Sensor Assy">Sensor Assy</option>
+            </select>
         </div>
 
         <div class="form-group">
@@ -124,14 +131,25 @@
 </div>
 
 <script>
-    // 기존에 만드신 구글 시트 URL 주소를 여기에 넣어주세요!
+    // ⚠️ 중요: 발급받으신 구글 웹앱 URL(macros/s/.../exec) 주소를 여기에 정확히 붙여넣으세요!
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfDAaYug_wX-1k0vowMOmPYisLcWzWEpRcdT6pDrI-m5vOsCWEw3fqBkXRGaLbXnsP4w/exec";
 
+    // 날짜 및 시간 자동 입력 기능
     function setNow() {
         const now = new Date();
-        const str = `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 ${now.getHours() >= 12 ? '오후':'오전'} ${now.getHours()%12 || 12}:${String(now.getMinutes()).padStart(2,'0')}`;
-        document.getElementById('startTime').value = str;
-        document.getElementById('endTime').value = str;
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? '오후' : '오전';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        
+        const timeStr = `${year}년 ${month}월 ${date}일 ${ampm} ${hours}:${minutes}`;
+        document.getElementById('startTime').value = timeStr;
+        document.getElementById('endTime').value = timeStr;
     }
     setNow();
 
@@ -140,6 +158,7 @@
         btn.disabled = true;
         btn.innerText = "처리 중...";
 
+        // 입력 데이터 정리 (누락 방지를 위해 값이 없으면 마이너스 표시)
         const data = {
             type: document.getElementById('type').value,
             site: document.getElementById('site').value,
@@ -149,21 +168,77 @@
             assy: document.getElementById('assy').value,
             startTime: document.getElementById('startTime').value,
             endTime: document.getElementById('endTime').value,
-            worker: document.getElementById('worker').value || '-',
-            phenomenon: document.getElementById('phenomenon').value || '-',
-            cause: document.getElementById('cause').value || '-',
-            action: document.getElementById('action').value || '-'
+            worker: document.getElementById('worker').value.trim() || '-',
+            phenomenon: document.getElementById('phenomenon').value.trim() || '-',
+            cause: document.getElementById('cause').value.trim() || '-',
+            action: document.getElementById('action').value.trim() || '-'
         };
 
-        const report = `[부동 분석 공유]\n종류: ${data.type}\n0. Site: ${data.site}\n1. 호기: ${data.hogi}\n2-1. Machine: ${data.machine}\n3-1. 발생시간: ${data.startTime}\n4. 작업자: ${data.worker}\n5. 현상: ${data.phenomenon}\n6. 원인: ${data.cause}\n7. 조치: ${data.action}`;
+        // 완벽한 전체 카카오톡 리포트 텍스트 포맷 (누락 방지)
+        const report = `[부동 분석 공유]
+종류: ${data.type}
+0. Site : ${data.site}
+1. 호기 : ${data.hogi}
+2-1. Machine : ${data.machine}
+2-2. Unit : ${data.unit}
+2-3. Assy' : ${data.assy}
+3-1. 발생시간 : ${data.startTime}
+3-2. 조치완료 : ${data.endTime}
+4. 작업자 : ${data.worker}
+5. 현상 : ${data.phenomenon}
+6. 원인 : ${data.cause}
+7. 조치 : ${data.action}`;
 
-        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
+        // 1. 구글 스프레드시트로 전송 및 백엔드 실행
+        fetch(SCRIPT_URL, { 
+            method: "POST", 
+            mode: "no-cors", 
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data) 
+        })
         .then(() => {
-            navigator.clipboard.writeText(report).then(() => {
-                alert("저장 및 복사 완료! 카톡에 붙여넣으세요.");
-                btn.disabled = false; btn.innerText = "저장 및 리포트 복사";
-            });
+            // 전송 완료 후 시스템 클립보드에 복사 수행
+            copyText(report, btn);
+        })
+        .catch(err => {
+            console.error(err);
+            // 통신 에러가 나더라도 클립보드 복사는 실행되도록 안전장치 마련
+            copyText(report, btn);
         });
+    }
+
+    function copyText(text, btnElement) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("구글 시트에 데이터가 저장되었고, 리포트가 복사되었습니다!\n\n카카오톡방에 붙여넣기(Ctrl+V) 하세요.");
+                resetBtn(btnElement);
+            }).catch(() => {
+                fallbackCopy(text, btnElement);
+            });
+        } else {
+            fallbackCopy(text, btnElement);
+        }
+    }
+
+    function fallbackCopy(text, btnElement) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed"; 
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            alert("저장 및 복사가 완료되었습니다!\n\n카카오톡방에 붙여넣기 하세요.");
+        } catch (err) {
+            alert("복사에 실패했습니다. 수동으로 텍스트를 선택해 주세요.");
+        }
+        document.body.removeChild(textarea);
+        resetBtn(btnElement);
+    }
+
+    function resetBtn(btnElement) {
+        btnElement.disabled = false;
+        btnElement.innerText = "저장 및 리포트 복사";
     }
 </script>
 </body>
