@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HG 법인 비전 BMPD 분석</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
+        body { background-color: #f5f5f5; display: flex; justify-content: center; padding: 20px 10px; }
+        .container { width: 100%; max-width: 450px; background: white; border: 1px solid #e0e0e0; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        /* 상단 헤더: 요청하신 제목으로 수정 */
+        .header { background-color: #444; color: white; text-align: center; padding: 25px 15px; }
+        .header h1 { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+        .header p { font-size: 13px; color: #ccc; }
+        
+        /* 단일 탭 섹션 표시 */
+        .tabs { background: #333; color: white; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; }
+        
+        .form-body { padding: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 6px; color: #111; }
+        
+        select, input[type="text"], textarea {
+            width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; background-color: #fafafa; outline: none;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        
+        .btn-submit {
+            width: 100%; background-color: #007bff; color: white; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;
+        }
+        .btn-submit:disabled { background-color: #ccc; }
+        .footer-mark { text-align: right; color: #aaa; font-size: 12px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>HG 법인 비전<br>BMPD 분석</h1>
+        <p>지속 가능한 데이터 분석 시스템</p>
+    </div>
+    
+    <div class="tabs">부동 분석 리포트 생성</div>
+    
+    <div class="form-body">
+        <div class="form-group">
+            <label>종류 :</label>
+            <select id="type">
+                <option value="BM">BM</option>
+                <option value="파단">파단</option>
+                <option value="정기점검">정기점검</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>0. Site :</label>
+            <select id="site">
+                <option value="-">-</option>
+                <option value="NSE">NSE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>1. 호기 :</label>
+            <select id="hogi">
+                <option value="-">-</option>
+                <option value="1-4">1-4</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>2-1. Machine :</label>
+            <select id="machine">
+                <option value="-">-</option>
+                <option value="Lamination">Lamination</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>2-2. Unit :</label>
+            <select id="unit"><option value="-">-</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>2-3. Assy' :</label>
+            <select id="assy"><option value="-">-</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>3-1. 발생시간 :</label>
+            <input type="text" id="startTime">
+        </div>
+
+        <div class="form-group">
+            <label>3-2. 조치완료 :</label>
+            <input type="text" id="endTime">
+        </div>
+
+        <div class="form-group">
+            <label>4. 작업자 :</label>
+            <input type="text" id="worker" placeholder="이름 입력">
+        </div>
+
+        <div class="form-group">
+            <label>5. 현상 :</label>
+            <textarea id="phenomenon" placeholder="현상 입력"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>6. 원인 :</label>
+            <textarea id="cause" placeholder="원인 입력"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>7. 조치 :</label>
+            <textarea id="action" placeholder="조치 내용 입력"></textarea>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="saveAndCopy()">저장 및 리포트 복사</button>
+        <div class="footer-mark">HG Vision System</div>
+    </div>
+</div>
+
+<script>
+    // 기존에 만드신 구글 시트 URL 주소를 여기에 넣어주세요!
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfDAaYug_wX-1k0vowMOmPYisLcWzWEpRcdT6pDrI-m5vOsCWEw3fqBkXRGaLbXnsP4w/exec";
+
+    function setNow() {
+        const now = new Date();
+        const str = `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 ${now.getHours() >= 12 ? '오후':'오전'} ${now.getHours()%12 || 12}:${String(now.getMinutes()).padStart(2,'0')}`;
+        document.getElementById('startTime').value = str;
+        document.getElementById('endTime').value = str;
+    }
+    setNow();
+
+    function saveAndCopy() {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "처리 중...";
+
+        const data = {
+            type: document.getElementById('type').value,
+            site: document.getElementById('site').value,
+            hogi: document.getElementById('hogi').value,
+            machine: document.getElementById('machine').value,
+            unit: document.getElementById('unit').value,
+            assy: document.getElementById('assy').value,
+            startTime: document.getElementById('startTime').value,
+            endTime: document.getElementById('endTime').value,
+            worker: document.getElementById('worker').value || '-',
+            phenomenon: document.getElementById('phenomenon').value || '-',
+            cause: document.getElementById('cause').value || '-',
+            action: document.getElementById('action').value || '-'
+        };
+
+        const report = `[부동 분석 공유]\n종류: ${data.type}\n0. Site: ${data.site}\n1. 호기: ${data.hogi}\n2-1. Machine: ${data.machine}\n3-1. 발생시간: ${data.startTime}\n4. 작업자: ${data.worker}\n5. 현상: ${data.phenomenon}\n6. 원인: ${data.cause}\n7. 조치: ${data.action}`;
+
+        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
+        .then(() => {
+            navigator.clipboard.writeText(report).then(() => {
+                alert("저장 및 복사 완료! 카톡에 붙여넣으세요.");
+                btn.disabled = false; btn.innerText = "저장 및 리포트 복사";
+            });
+        });
+    }
+</script>
+</body>
+</html>
