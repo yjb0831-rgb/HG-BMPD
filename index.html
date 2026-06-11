@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HG 법인 비전 BMPD 분석</title>
+    <title>ESHG 법인 Vision BMPD 분석 (ESHG Vision Downtime Analysis)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
         body { background-color: #f5f5f5; display: flex; justify-content: center; padding: 20px 10px; }
         .container { width: 100%; max-width: 450px; background: white; border: 1px solid #e0e0e0; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
         .header { background-color: #444; color: white; text-align: center; padding: 25px 15px; }
-        .header h1 { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+        .header h1 { font-size: 20px; font-weight: bold; margin-bottom: 10px; line-height: 1.4; }
         .header p { font-size: 13px; color: #ccc; }
         
         .tabs { background: #333; color: white; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; }
@@ -19,6 +19,10 @@
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 6px; color: #111; }
         
+        .time-input-group { display: flex; gap: 5px; }
+        .btn-time { padding: 0 10px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+        .btn-time:hover { background: #5a6268; }
+
         select, input[type="text"], textarea {
             width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; background-color: #fafafa; outline: none; color: #333;
         }
@@ -36,16 +40,17 @@
 
 <div class="container">
     <div class="header">
-        <h1>HG 법인 비전<br>BMPD 분석</h1>
-        <p>지속 가능한 데이터 분석 시스템</p>
+        <h1>ESHG 법인 Vision<br>BMPD 분석<br><span style="font-size:14px; font-weight:normal; color:#ddd;">(ESHG Vision Downtime Analysis)</span></h1>
+        <p>지속 가능한 데이터 분석 시스템 (Sustainable Data Analysis System)</p>
     </div>
     
-    <div class="tabs">부동 분석 리포트 생성</div>
+    <div class="tabs">부동 분석 리포트 생성 (Generate Downtime Analysis Report)</div>
     
     <div class="form-body">
         <div class="form-group">
-            <label>종류 :</label>
+            <label>종류 (Type) : *</label>
             <select id="type">
+                <option value="-">-</option>
                 <option value="BM">BM</option>
                 <option value="PD">PD</option>
                 <option value="PM">PM</option>
@@ -54,7 +59,7 @@
         </div>
 
         <div class="form-group">
-            <label>0. Site :</label>
+            <label>0. Site : *</label>
             <select id="site">
                 <option value="-">-</option>
                 <option value="ESHG">ESHG</option>
@@ -62,215 +67,305 @@
         </div>
 
         <div class="form-group">
-            <label>1. 호기 :</label>
-            <select id="hogi">
-                <option value="-">-</option>
-                <option value="DNC_1A_양극">DNC_1A_양극</option>
-                <option value="DNC_1A_음극">DNC_1A_음극</option>
-                <option value="DNC_1B_양극">DNC_1B_양극</option>
-                <option value="DNC_1B_음극">DNC_1B_음극</option>
-                <option value="DNC_1C_양극">DNC_1C_양극</option>
-                <option value="DNC_1C_음극">DNC_1C_음극</option>
-                <option value="DNC_1D_양극">DNC_1D_양극</option>
-                <option value="DNC_1D_음극">DNC_1D_음극</option>
-                <option value="DNC_2A_양극">DNC_2A_양극</option>
-                <option value="DNC_2A_음극">DNC_2A_음극</option>
-                <option value="DNC_2B_양극">DNC_2B_양극</option>
-                <option value="DNC_2B_음극">DNC_2B_음극</option>
-                <option value="DNC_2C_양극">DNC_2C_양극</option>
-                <option value="DNC_2C_음극">DNC_2C_음극</option>
-                <option value="DNC_2D_양극">DNC_2D_양극</option>
-                <option value="DNC_2D_음극">DNC_2D_음극</option>
-                <option value="AZS_1A_1호기">AZS_1A_1호기</option>
-                <option value="AZS_1A_2호기">AZS_1A_2호기</option>
-                <option value="AZS_1A_3호기">AZS_1A_3호기</option>
-                <option value="AZS_1A_4호기">AZS_1A_4호기</option>
-                <option value="AZS_1A_5호기">AZS_1A_5호기</option>
-                <option value="AZS_1A_6호기">AZS_1A_6호기</option>              
-                <option value="AZS_1B_1호기">AZS_1B_1호기</option>
-                <option value="AZS_1B_2호기">AZS_1B_2호기</option>
-                <option value="AZS_1B_3호기">AZS_1B_3호기</option>
-                <option value="AZS_1B_4호기">AZS_1B_4호기</option>
-                <option value="AZS_1B_5호기">AZS_1B_5호기</option>
-                <option value="AZS_1B_6호기">AZS_1B_6호기</option>
-                <option value="AZS_1C_1호기">AZS_1C_1호기</option>
-                <option value="AZS_1C_2호기">AZS_1C_2호기</option>
-                <option value="AZS_1C_3호기">AZS_1C_3호기</option>
-                <option value="AZS_1C_4호기">AZS_1C_4호기</option>
-                <option value="AZS_1C_5호기">AZS_1C_5호기</option>
-                <option value="AZS_1C_6호기">AZS_1C_6호기</option>
-                <option value="AZS_1D_1호기">AZS_1D_1호기</option>
-                <option value="AZS_1D_2호기">AZS_1D_2호기</option>
-                <option value="AZS_1D_3호기">AZS_1D_3호기</option>
-                <option value="AZS_1D_4호기">AZS_1D_4호기</option>
-                <option value="AZS_1D_5호기">AZS_1D_5호기</option>
-                <option value="AZS_1D_6호기">AZS_1D_6호기</option>
-                <option value="AZS_2A_1호기">AZS_2A_1호기</option>
-                <option value="AZS_2A_2호기">AZS_2A_2호기</option>
-                <option value="AZS_2A_3호기">AZS_2A_3호기</option>
-                <option value="AZS_2A_4호기">AZS_2A_4호기</option>
-                <option value="AZS_2A_5호기">AZS_2A_5호기</option>
-                <option value="AZS_2A_6호기">AZS_2A_6호기</option>       
-                <option value="AZS_2B_1호기">AZS_2B_1호기</option>
-                <option value="AZS_2B_2호기">AZS_2B_2호기</option>
-                <option value="AZS_2B_3호기">AZS_2B_3호기</option>
-                <option value="AZS_2B_4호기">AZS_2B_4호기</option>
-                <option value="AZS_2B_5호기">AZS_2B_5호기</option>
-                <option value="AZS_2B_6호기">AZS_2B_6호기</option>
-                <option value="AZS_2C_1호기">AZS_2C_1호기</option>
-                <option value="AZS_2C_2호기">AZS_2C_2호기</option>
-                <option value="AZS_2C_3호기">AZS_2C_3호기</option>
-                <option value="AZS_2C_4호기">AZS_2C_4호기</option>
-                <option value="AZS_2C_5호기">AZS_2C_5호기</option>
-                <option value="AZS_2C_6호기">AZS_2C_6호기</option>
-                <option value="AZS_2D_1호기">AZS_2D_1호기</option>
-                <option value="AZS_2D_2호기">AZS_2D_2호기</option>
-                <option value="AZS_2D_3호기">AZS_2D_3호기</option>
-                <option value="AZS_2D_4호기">AZS_2D_4호기</option>
-                <option value="AZS_2D_5호기">AZS_2D_5호기</option>
-                <option value="AZS_2D_6호기">AZS_2D_6호기</option>
-                <option value="AZS_1-AB_Insp.">AZS_1-AB_Insp.</option>
-                <option value="AZS_1-CD_Insp.">AZS_1-CD_Insp.</option>
-                <option value="AZS_2-AB_Insp.">AZS_2-AB_Insp.</option>
-                <option value="AZS_2-CD_Insp.">AZS_2-CD_Insp.</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>2-1. Machine :</label>
-            <select id="machine">
+            <label>1-1. 공정 (Process) : *</label>
+            <select id="process" onchange="filterDropdowns()">
                 <option value="-">-</option>
                 <option value="DNC">DNC</option>
                 <option value="AZS">AZS</option>
+                <option value="PKG">PKG</option>
+                <option value="EOL">EOL</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>2-2. Unit :</label>
-            <select id="unit">
+            <label>1-2. 호기 (Unit No.) : *</label>
+            <select id="hogi">
                 <option value="-">-</option>
-                <option value="DNC_Surface Vision">DNC_Surface Vision</option>
-                <option value="DNC_Cutting Vision">DNC_Cutting Vision</option>
-                <option value="AZS_Align Vision">AZS_Align Vision</option>
-                <option value="AZS_Stack Vision">AZS_Stack Vision</option>
-                <option value="AZS_Sepa Vision">AZS_Sepa Vision</option>
-                <option value="AZS_Top/Back Vision">AZS_Top/Back Vision</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>2-3. Assy' :</label>
-            <select id="assy">
+            <label>2-2. Vision Type : *</label>
+            <select id="visionType">
+                <option value="-">-</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>2-3. 원인처 (Source of Cause) : *</label>
+            <select id="source">
                 <option value="-">-</option>
                 <option value="Camera">Camera</option>
                 <option value="Lighting">Lighting</option>
                 <option value="PC">PC</option>
-                <option value="전장">전장</option>
+                <option value="전장 (Electricity)">전장 (Electricity)</option>
                 <option value="S/W">S/W</option>
                 <option value="H/W">H/W</option>
-                <option value="ROI 수정">ROI 수정</option>
-                <option value="Recipe 수정">Recipe 수정</option>
+                <option value="ROI 수정 (ROI Modification)">ROI 수정 (ROI Modification)</option>
+                <option value="Recipe 수정 (Recipe Modification)">Recipe 수정 (Recipe Modification)</option>
                 <option value="Calibration">Calibration</option>
-                <option value="공정불량">공정불량</option>
-                <option value="설비기인">설비기인</option>
+                <option value="공정불량 (Process Defect)">공정불량 (Process Defect)</option>
+                <option value="설비기인 (Machine Issue)">설비기인 (Machine Issue)</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>3-1. 발생시간 :</label>
-            <input type="text" id="startTime">
+            <label>3-1. 발생시간 (Occurrence Time) :</label>
+            <div class="time-input-group">
+                <input type="text" id="startTime" onblur="validateTimeInput(this)">
+                <button type="button" class="btn-time" onclick="setTimeField('startTime')">현재시간</button>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>3-2. 조치완료 :</label>
-            <input type="text" id="endTime">
+            <label>3-2. 조치완료 (Action Completed Time) :</label>
+            <div class="time-input-group">
+                <input type="text" id="endTime" onblur="validateTimeInput(this)">
+                <button type="button" class="btn-time" onclick="setTimeField('endTime')">현재시간</button>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>4. 작업자 :</label>
-            <input type="text" id="worker" placeholder="이름 입력">
+            <label>4. 작업자 (PIC) : *</label>
+            <input type="text" id="worker" placeholder="이름 입력 (Enter Name)">
         </div>
 
         <div class="form-group">
-            <label>5. 현상 :</label>
-            <textarea id="phenomenon" placeholder="현상 입력"></textarea>
+            <label>5. 현상 (Phenomenon) : *</label>
+            <textarea id="phenomenon" placeholder="현상 입력 (Enter Phenomenon)"></textarea>
         </div>
 
         <div class="form-group">
-            <label>6. 원인 :</label>
-            <textarea id="cause" placeholder="원인 입력"></textarea>
+            <label>6. 원인 (Cause) : *</label>
+            <textarea id="cause" placeholder="원인 입력 (Enter Cause)"></textarea>
         </div>
 
         <div class="form-group">
-            <label>7. 조치 :</label>
-            <textarea id="action" placeholder="조치 내용 입력"></textarea>
+            <label>7. 조치 (Action) : *</label>
+            <textarea id="action" placeholder="조치 내용 입력 (Enter Action)"></textarea>
         </div>
 
-        <button class="btn-submit" id="submitBtn" onclick="saveAndCopy()">저장 및 리포트 복사</button>
+        <button class="btn-submit" id="submitBtn" onclick="saveAndCopy()">저장 및 리포트 복사 (Save & Copy Report)</button>
         <div class="footer-mark">HG Vision System</div>
     </div>
 </div>
 
 <script>
-    // ⚠️ 중요: 발급받으신 구글 웹앱 URL(macros/s/.../exec) 주소를 여기에 정확히 붙여넣으세요!
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfDAaYug_wX-1k0vowMOmPYisLcWzWEpRcdT6pDrI-m5vOsCWEw3fqBkXRGaLbXnsP4w/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8d31jJuBmm8pNA3UWaEq-N5tuBfPHRbBaz4J3Hgk9KF-pqXh_mKyM52y6jCYjk13HqA/exec";
 
-    // 날짜 및 시간 자동 입력 기능
-    function setNow() {
+    const HOGI_MASTER = {
+        "DNC": [
+            "1A_양극", "1A_음극", "1B_양극", "1B_음극",
+            "1C_양극", "1C_음극", "1D_양극", "1D_음극",
+            "2A_양극", "2A_음극", "2B_양극", "2B_음극",
+            "2C_양극", "2C_음극", "2D_양극", "2D_음극"
+        ],
+        "AZS": [
+            "1A_1호기", "1A_2호기", "1A_3호기", "1A_4호기", "1A_5호기", "1A_6호기",
+            "1B_1호기", "1B_2호기", "1B_3호기", "1B_4호기", "1B_5호기", "1B_6호기",
+            "1C_1호기", "1C_2호기", "1C_3호기", "1C_4호기", "1C_5호기", "1C_6호기",
+            "1D_1호기", "1D_2호기", "1D_3호기", "1D_4호기", "1D_5호기", "1D_6호기",
+            "2A_1호기", "2A_2호기", "2A_3호기", "2A_4호기", "2A_5호기", "2A_6호기",
+            "2B_1호기", "2B_2호기", "2B_3호기", "2B_4호기", "2B_5호기", "2B_6호기",
+            "2C_1호기", "2C_2호기", "2C_3호기", "2C_4호기", "2C_5호기", "2C_6호기",
+            "2D_1호기", "2D_2호기", "2D_3호기", "2D_4호기", "2D_5호기", "2D_6호기",
+            "1-AB_Insp.", "1-CD_Insp.", "2-AB_Insp.", "2-CD_Insp."
+        ],
+        "PKG": [
+            "P_#1-1", "P_#1-2", "P_#2-1", "P_#2-2", "P_#3-1", "P_#3-2", "P_#4-1", "P_#4-2", "P_#5-1", "P_#5-2", "P_#5-3"
+        ],
+        "EOL": [
+            "E_#1-1", "E_#1-2", "E_#2-1", "E_#2-2", "E_#3-1", "E_#3-2", "E_#4-1", "E_#4-2", "E_#5-1", "E_#5-2", "E_#5-3"
+        ]
+    };
+
+    const VISION_MASTER = {
+        "DNC": [
+            "Surface Vision", "Cutting Vision"
+        ],
+        "AZS": [
+            "Align Vision", "Stack Vision", "Sepa Vision", "Top/Back Vision"
+        ],
+        "PKG": [
+            "P_Lead align (+)", "P_Lead align (-)", "P_Pouch align", "P_Pouch crack", "P_Lead", 
+            "P_Welding (+)", "P_Welding (-)", "P_X-ray tab (+)", "P_X-ray tab (-)", "P_CT machine", "P_Lead sealing"
+        ],
+        "EOL": [
+            "E_EOL cosmetic", "E_Sealing thickness (Long)", "E_Sealing thickness (Short)"
+        ]
+    };
+
+    window.onload = function() {
+        filterDropdowns();
+        initTime();
+    };
+
+    function filterDropdowns() {
+        const process = document.getElementById('process').value;
+        const hogiSelect = document.getElementById('hogi');
+        const visionSelect = document.getElementById('visionType');
+        
+        hogiSelect.innerHTML = '<option value="-">-</option>';
+        if (process !== "-" && HOGI_MASTER[process]) {
+            HOGI_MASTER[process].forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name; opt.innerText = name;
+                hogiSelect.appendChild(opt);
+            });
+        } else if (process === "-") {
+            Object.keys(HOGI_MASTER).forEach(key => {
+                HOGI_MASTER[key].forEach(name => {
+                    if (!Array.from(hogiSelect.options).some(o => o.value === name)) {
+                        const opt = document.createElement('option');
+                        opt.value = name; opt.innerText = name;
+                        hogiSelect.appendChild(opt);
+                    }
+                });
+            });
+        }
+
+        visionSelect.innerHTML = '<option value="-">-</option>';
+        if (process !== "-" && VISION_MASTER[process]) {
+            VISION_MASTER[process].forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name; opt.innerText = name;
+                visionSelect.appendChild(opt);
+            });
+        } else if (process === "-") {
+            Object.keys(VISION_MASTER).forEach(key => {
+                VISION_MASTER[key].forEach(name => {
+                    if (!Array.from(visionSelect.options).some(o => o.value === name)) {
+                        const opt = document.createElement('option');
+                        opt.value = name; opt.innerText = name;
+                        visionSelect.appendChild(opt);
+                    }
+                });
+            });
+        }
+    }
+
+    function getFormattedTime() {
         const now = new Date();
         const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? '오후' : '오전';
+        const ampm = hours >= 12 ? 'PM' : 'AM';
         
         hours = hours % 12;
         hours = hours ? hours : 12;
+        const hoursStr = String(hours).padStart(2, '0');
         
-        const timeStr = `${year}년 ${month}월 ${date}일 ${ampm} ${hours}:${minutes}`;
+        return `${year}.${month}.${date}. ${ampm} ${hoursStr}:${minutes}`;
+    }
+
+    function setTimeField(fieldId) {
+        document.getElementById(fieldId).value = getFormattedTime();
+    }
+
+    function initTime() {
+        const timeStr = getFormattedTime();
         document.getElementById('startTime').value = timeStr;
         document.getElementById('endTime').value = timeStr;
     }
-    setNow();
+
+    // [핵심 추가] 초 단위 입력 여부 검증 함수 (한글 + 영문)
+    function validateTimeInput(inputElement) {
+        const val = inputElement.value.trim();
+        
+        // 정규식 설명: 콜론(:)이 두 개 들어가거나 문자열 끝에 초 단위가 매칭되는지 검사
+        // 예시: "2026.06.11. PM 12:09:00" 처럼 시:분:초 형태 확인
+        const secondRegex = /(AM|PM)\s+\d{2}:\d{2}:\d{2}$/i;
+        const colonCount = (val.match(/:/g) || []).length;
+
+        if (secondRegex.test(val) || colonCount >= 2) {
+            alert("[경고] 초 단위를 제외하고 '시:분'까지만 입력해 주세요.\n(초는 입력 하지 마세요.)\n\n[Warning] Please enter up to 'Hour:Minute' only, excluding seconds.\n(Do not enter seconds.)");
+            
+            // 유저가 입력한 값에서 초 단위(:XX) 강제 전처리 슬라이싱 처리
+            if (colonCount >= 2) {
+                const lastColonIndex = val.lastIndexOf(':');
+                inputElement.value = val.substring(0, lastColonIndex);
+            }
+            setTimeout(() => inputElement.focus(), 10);
+            return false;
+        }
+        return true;
+    }
 
     function saveAndCopy() {
+        // 저장 직전 시간 필드 최종 무결성 검증 트리거
+        const startTimeInput = document.getElementById('startTime');
+        const endTimeInput = document.getElementById('endTime');
+
+        if (!validateTimeInput(startTimeInput)) return;
+        if (!validateTimeInput(endTimeInput)) return;
+
+        const fieldsToValidate = [
+            { id: 'type', name: '종류 (Type)' },
+            { id: 'site', name: 'Site' },
+            { id: 'process', name: '공정 (Process)' },
+            { id: 'hogi', name: '호기 (Unit No.)' },
+            { id: 'visionType', name: '2-2. Vision Type' },
+            { id: 'source', name: '원인처 (Source of Cause)' }
+        ];
+
+        for (let field of fieldsToValidate) {
+            if (document.getElementById(field.id).value === '-') {
+                alert(`[경고] ${field.name} 항목을 선택해주세요.`);
+                document.getElementById(field.id).focus();
+                return;
+            }
+        }
+
+        const textFields = [
+            { id: 'worker', name: '작업자 (PIC)' },
+            { id: 'phenomenon', name: '현상 (Phenomenon)' },
+            { id: 'cause', name: '원인 (Cause)' },
+            { id: 'action', name: '조치 (Action)' }
+        ];
+
+        for (let field of textFields) {
+            if (!document.getElementById(field.id).value.trim()) {
+                alert(`[경고] ${field.name} 내용을 입력해주세요.`);
+                document.getElementById(field.id).focus();
+                return;
+            }
+        }
+
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "처리 중...";
+        btn.innerText = "처리 중... (Processing...)";
 
-        // 입력 데이터 정리 (누락 방지를 위해 값이 없으면 마이너스 표시)
         const data = {
             type: document.getElementById('type').value,
             site: document.getElementById('site').value,
+            process: document.getElementById('process').value,
             hogi: document.getElementById('hogi').value,
-            machine: document.getElementById('machine').value,
-            unit: document.getElementById('unit').value,
-            assy: document.getElementById('assy').value,
+            visionType: document.getElementById('visionType').value,
+            source: document.getElementById('source').value,
             startTime: document.getElementById('startTime').value,
             endTime: document.getElementById('endTime').value,
-            worker: document.getElementById('worker').value.trim() || '-',
-            phenomenon: document.getElementById('phenomenon').value.trim() || '-',
-            cause: document.getElementById('cause').value.trim() || '-',
-            action: document.getElementById('action').value.trim() || '-'
+            worker: document.getElementById('worker').value.trim(),
+            phenomenon: document.getElementById('phenomenon').value.trim(),
+            cause: document.getElementById('cause').value.trim(),
+            action: document.getElementById('action').value.trim()
         };
 
-        // 완벽한 전체 카카오톡 리포트 텍스트 포맷 (누락 방지)
-        const report = `[부동 분석 공유]
-종류: ${data.type}
+        const report = `[부동 분석 공유 (Downtime Analysis Report)]
+종류 (Type): ${data.type}
 0. Site : ${data.site}
-1. 호기 : ${data.hogi}
-2-1. Machine : ${data.machine}
-2-2. Unit : ${data.unit}
-2-3. Assy' : ${data.assy}
-3-1. 발생시간 : ${data.startTime}
-3-2. 조치완료 : ${data.endTime}
-4. 작업자 : ${data.worker}
-5. 현상 : ${data.phenomenon}
-6. 원인 : ${data.cause}
-7. 조치 : ${data.action}`;
+1-1. 공정 (Process) : ${data.process}
+1-2. 호기 (Unit No.) : ${data.hogi}
+2-2. Vision Type : ${data.visionType}
+2-3. 원인처 (Source of Cause) : ${data.source}
+3-1. 발생시간 (Occurrence Time) : ${data.startTime}
+3-2. 조치완료 (Action Completed) : ${data.endTime}
+4. 작업자 (PIC) : ${data.worker}
+5. 현상 (Phenomenon) : ${data.phenomenon}
+6. 원인 (Cause) : ${data.cause}
+7. 조치 (Action) : ${data.action}`;
 
-        // 1. 구글 스프레드시트로 전송 및 백엔드 실행
         fetch(SCRIPT_URL, { 
             method: "POST", 
             mode: "no-cors", 
@@ -278,12 +373,10 @@
             body: JSON.stringify(data) 
         })
         .then(() => {
-            // 전송 완료 후 시스템 클립보드에 복사 수행
             copyText(report, btn);
         })
         .catch(err => {
             console.error(err);
-            // 통신 에러가 나더라도 클립보드 복사는 실행되도록 안전장치 마련
             copyText(report, btn);
         });
     }
@@ -291,7 +384,7 @@
     function copyText(text, btnElement) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
-                alert("구글 시트에 데이터가 저장되었고, 리포트가 복사되었습니다!\n\n카카오톡방에 붙여넣기(Ctrl+V) 하세요.");
+                alert("구글 시트에 데이터가 전송되었고, 리포트가 복사되었습니다!\n\n(Data sent and report copied!)");
                 resetBtn(btnElement);
             }).catch(() => {
                 fallbackCopy(text, btnElement);
@@ -309,9 +402,9 @@
         textarea.select();
         try {
             document.execCommand("copy");
-            alert("저장 및 복사가 완료되었습니다!\n\n카카오톡방에 붙여넣기 하세요.");
+            alert("저장 및 복사가 완료되었습니다!\n(Save and copy completed!)");
         } catch (err) {
-            alert("복사에 실패했습니다. 수동으로 텍스트를 선택해 주세요.");
+            alert("복사 실패 (Copy failed)");
         }
         document.body.removeChild(textarea);
         resetBtn(btnElement);
@@ -319,7 +412,7 @@
 
     function resetBtn(btnElement) {
         btnElement.disabled = false;
-        btnElement.innerText = "저장 및 리포트 복사";
+        btnElement.innerText = "저장 및 리포트 복사 (Save & Copy Report)";
     }
 </script>
 </body>
